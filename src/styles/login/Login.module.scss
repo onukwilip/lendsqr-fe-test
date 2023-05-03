@@ -26,7 +26,7 @@
                 display: none;
             }
             img {
-                width: 500px;
+                width: 600px;
                 height: 430px;
                 @include media(max, $_1201) {
                     width: 100%;
@@ -65,6 +65,12 @@
         * {
             width: 100%;
         }
+        .input {
+            height: 50px;
+            & > div {
+                height: 100%;
+            }
+        }
         .password-container {
             @include flex(center, center, 1rem, row);
             .password-input {
@@ -89,6 +95,46 @@
 
         .forgot-password {
             color: $pry-color;
+            text-transform: uppercase;
+            font-weight: bold;
         }
+    }
+}
+
+.password-input {
+    height: 100%;
+    border: 1px solid rgba(34, 36, 38, 0.15);
+    border-radius: 0.28571429rem;
+    &:hover {
+        border-color: $pry-color;
+    }
+    * {
+        height: 50px;
+    }
+    @include flex(stretch, start, 0, row);
+    input {
+        flex: 1;
+        border: none !important;
+        outline: none !important;
+        &:focus {
+            outline: none !important;
+        }
+        &:-webkit-autofill {
+            box-shadow: 0 0 0 100px ivory inset !important;
+            border-color: #e5dfa1 !important;
+            & + button {
+                box-shadow: 0 0 0 100px ivory inset !important;
+                border-color: #e5dfa1 !important;
+            }
+        }
+    }
+    button {
+        flex: 0;
+        padding: 0px 15px;
+        border: none !important;
+        background: transparent;
+        cursor: pointer;
+        color: $pry-color;
+        font-weight: 1000px;
     }
 }

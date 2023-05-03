@@ -48,6 +48,10 @@
 
     .table-container {
         table {
+            border: none !important;
+            padding: 1rem 2rem;
+            background: white;
+            box-shadow: $box-shadow-light;
             .th {
                 display: flex;
                 @include flex(center, flex-start, 15px, row);
@@ -65,6 +69,22 @@
                 & > i {
                     cursor: pointer;
                 }
+            }
+            thead th {
+                background: transparent;
+                border-bottom: none;
+                padding: 1.5rem 0.78571429em !important;
+                // &:first-child,
+                // &:last-child {
+                //     padding: 0px 2rem !important;
+                // }
+            }
+            tbody td {
+                padding: 1.5rem 0.78571429em !important;
+                // &:first-child,
+                // &:last-child {
+                //     padding: 0px 2rem !important;
+                // }
             }
             thead,
             tbody {
@@ -218,13 +238,13 @@
     color: inherit;
     position: absolute;
     right: 0;
-    padding: 5px;
+    padding: 1rem;
     background-color: $pry-color-light;
     border-radius: 10px;
     box-shadow: $box-shadow-light;
     top: 3rem;
     z-index: 1;
-    width: 150px;
+    width: 160px;
     @include flex(center, center, 2px, column);
     &:hover {
         color: inherit;

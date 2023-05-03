@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Form, Icon } from "semantic-ui-react";
 import css from "../styles/login/Login.module.scss";
-import svgImg from "../assets/img/undraw_wishes_icyp.svg";
+import svgImg from "../assets/img/pablo-sign-in 1demo.svg";
 import { useNavigate } from "react-router-dom";
 
 // https://www.lendsqr.com/assets/icons/header-logo.svg
@@ -42,39 +42,26 @@ export const LoginForm = ({ onSubmit, tooglePasswordType }) => {
         >
           <Form.Input
             placeholder="Enter email"
-            icon="mail"
-            iconPosition="left"
+            className={css.input}
             type="email"
             required
           />
-          <div className={css["password-container"]}>
-            <div className={css["password-input"]}>
-              <Form.Input
-                placeholder="Enter password"
-                icon="key"
-                iconPosition="left"
-                type={passwordType}
-                minLength={8}
-                required
-              />
-            </div>
-
-            <div
-              className={css.toogle}
-              onClick={tooglePassword}
-              data-testid="passwordToogle"
-            >
-              <Icon name={passwordType === "password" ? "eye" : "eye slash"} />
-            </div>
-          </div>
-
+          <PasswordInput
+            passwordType={passwordType}
+            tooglePassword={tooglePassword}
+          />
+          <br />
           <a href="#" className={css["forgot-password"]}>
-            Forgotten password?
+            Forgot password?
           </a>
           <br />
           <div className="actions">
-            <Button animated="fade" className="my-button">
-              <Button.Content visible>Log in</Button.Content>
+            <Button
+              animated="fade"
+              className="my-button"
+              style={{ height: 50 }}
+            >
+              <Button.Content visible>LOG IN</Button.Content>
               <Button.Content hidden>
                 <Icon name="arrow right" />
               </Button.Content>
@@ -104,6 +91,22 @@ const Login = () => {
         <LoginForm />
       </div>
     </section>
+  );
+};
+
+const PasswordInput = ({ passwordType, tooglePassword }) => {
+  return (
+    <div className={css["password-input"]}>
+      <input
+        placeholder="Enter password"
+        type={passwordType}
+        minLength={8}
+        required
+      />
+      <button onClick={tooglePassword} type="button">
+        {passwordType === "password" ? "SHOW" : "HIDE"}
+      </button>
+    </div>
   );
 };
 

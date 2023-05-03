@@ -5,6 +5,7 @@ import { Icon, Input } from "semantic-ui-react";
 import Menu from "../components/Menu";
 import { UsersTab, UserDetails } from "../components/UsersTab";
 import css from "../styles/dashboard/Dashboard.module.scss";
+import profilePic from "../assets/img/profile-pic.png";
 
 const MobileMenu = ({ toogleMenu }) => {
   const variants = {
@@ -57,11 +58,8 @@ const MobileMenu = ({ toogleMenu }) => {
         data-testid="mobileProfileContainer"
       >
         <div className={css.profile}>
-          <img
-            src="https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"
-            alt="profile pic"
-          />
-          <em>Prince Onukwili</em>
+          <img src={profilePic} alt="profile pic" />
+          <em>Adedeji</em>
           <Icon name="caret down" />
         </div>
         <a href="#">Docs</a>
@@ -106,11 +104,8 @@ export const Header = () => {
           <a href="#">Docs</a>
           <Icon name="bell outline" data-testid="bell" />
           <div className={css.profile}>
-            <img
-              src="https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80"
-              alt="profile pic"
-            />
-            <em>Prince Onukwili</em>
+            <img src={profilePic} alt="profile pic" />
+            <em>Adedeji</em>
             <Icon name="caret down" />
           </div>
         </div>

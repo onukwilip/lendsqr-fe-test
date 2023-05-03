@@ -9,7 +9,6 @@ import {
   Table,
 } from "semantic-ui-react";
 import useAjaxHook from "use-ajax-request";
-// const useAjaxHook = (demo) => ({ sendRequest, data, loading, error });
 import css from "../styles/users/UsersTab.module.scss";
 import { CardClass, MenuClass, SelectClass } from "../utils/utils";
 import axios from "axios";
@@ -330,7 +329,7 @@ const Filter = ({
           <Button type="reset" onClick={reset}>
             Reset
           </Button>
-          <Button type="submit">Submit</Button>
+          <Button type="submit">Filter</Button>
         </div>
       </Form>
     </div>
@@ -341,7 +340,7 @@ const UserOptions = ({ onViewDetails, onActivate, onBlacklist, user }) => {
   return (
     <Link to={`/dashboard/user/${user?.id}`} className={css["user-options"]}>
       <div className={css.group}>
-        <Icon name="eye" /> <em>User details</em>
+        <Icon name="eye" /> <em>View details</em>
       </div>
       <div className={css.group}>
         <Icon name="user delete" /> <em>Blacklist user</em>
@@ -626,14 +625,14 @@ export const UsersTab = () => {
           ))}
         </div>
         <div className={css["table-container"]}>
-          <Table color="purple" padded stackable>
+          <Table padded stackable>
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell>
                   <div className={css.th}>
                     <em>ORGANIZATION</em>{" "}
                     <i
-                      className="fa-solid fa-bars-staggered"
+                      className="table-bar"
                       onClick={() => toogleFilter("organization")}
                     ></i>
                     {filterTenary("organization")}
@@ -643,7 +642,7 @@ export const UsersTab = () => {
                   <div className={css.th}>
                     <em>USERNAME</em>{" "}
                     <i
-                      className="fa-solid fa-bars-staggered"
+                      className="table-bar"
                       onClick={() => toogleFilter("username")}
                     ></i>{" "}
                     {filterTenary("username")}
@@ -653,7 +652,7 @@ export const UsersTab = () => {
                   <div className={css.th}>
                     <em>EMAIL</em>{" "}
                     <i
-                      className="fa-solid fa-bars-staggered"
+                      className="table-bar"
                       onClick={() => toogleFilter("email")}
                     ></i>{" "}
                     {filterTenary("email")}
@@ -663,7 +662,7 @@ export const UsersTab = () => {
                   <div className={css.th}>
                     <em>PHONE NUMBER</em>{" "}
                     <i
-                      className="fa-solid fa-bars-staggered"
+                      className="table-bar"
                       onClick={() => toogleFilter("phone")}
                     ></i>{" "}
                     {filterTenary("phone")}
@@ -673,7 +672,7 @@ export const UsersTab = () => {
                   <div className={css.th}>
                     <em>DATE JOINED</em>{" "}
                     <i
-                      className="fa-solid fa-bars-staggered"
+                      className="table-bar"
                       onClick={() => toogleFilter("date")}
                     ></i>{" "}
                     {filterTenary("date")}
@@ -683,7 +682,7 @@ export const UsersTab = () => {
                   <div className={css.th}>
                     <em>STATUS</em>{" "}
                     <i
-                      className="fa-solid fa-bars-staggered"
+                      className="table-bar"
                       onClick={() => toogleFilter("status")}
                     ></i>{" "}
                     {filterTenary("status")}
