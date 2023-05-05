@@ -104,7 +104,11 @@ const PasswordInput: PasswordInputType = ({ passwordType, tooglePassword }) => {
         minLength={8}
         required
       />
-      <button onClick={tooglePassword as any} type="button">
+      <button
+        onClick={tooglePassword as any}
+        type="button"
+        data-testid="passwordToogle"
+      >
         {passwordType === "password" ? "SHOW" : "HIDE"}
       </button>
     </div>
