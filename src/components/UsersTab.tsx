@@ -6,6 +6,7 @@ import {
   Icon,
   Message,
   Rating,
+  Select,
   Table,
 } from "semantic-ui-react";
 import useAjaxHook from "use-ajax-request";
@@ -16,6 +17,13 @@ import { useInput } from "use-manage-form";
 import { Link, Navigate, useParams } from "react-router-dom";
 import Loader from "./Loader";
 import dummyUser from "../assets/img/placeholder-img.png";
+import {
+  CardType,
+  FilterType,
+  OnSelectBoxChangeType,
+  PaginationType,
+  UserTagType,
+} from "../types";
 
 const testUser = {
   createdAt: "2072-12-27T03:44:22.522Z",
@@ -61,7 +69,7 @@ const testUser = {
   id: "1",
 };
 
-const Card = ({ item, className }) => {
+const Card: CardType = ({ item, className }) => {
   return (
     <>
       <div className={`${css.card} ${className}`}>
@@ -82,11 +90,11 @@ const cards = [
   new CardClass("fa-solid fa-database", "Users with savings", 102453),
 ];
 
-const Tag = ({ className, type }) => {
+const Tag: UserTagType = ({ className, type }) => {
   return <em className={`${css.tag} ${className} ${css[type]}`}>{type}</em>;
 };
 
-const Pagination = ({
+const Pagination: PaginationType = ({
   totalData,
   dataPerPage,
   paginate,
@@ -94,6 +102,8 @@ const Pagination = ({
   currentData,
 }) => {
   const numbers = [];
+  const numberOfUsers = (currentPage - 1) * dataPerPage + currentData;
+  const [selectBoxValue, setSelectBoxValue] = useState(numberOfUsers);
 
   for (let i = 1; i <= Math.ceil(totalData / dataPerPage); i++) {
     numbers.push(i);
@@ -101,23 +111,44 @@ const Pagination = ({
 
   const forward = () => {
     if (currentPage < Math.ceil(totalData / dataPerPage)) {
-      paginate((prev) => prev + 1);
+      paginate((prev: number) => prev + 1);
     }
   };
 
   const backward = () => {
     if (currentPage > 1) {
-      paginate((prev) => prev - 1);
+      paginate((prev: number) => prev - 1);
     }
   };
+
+  const selectBoxOptions = numbers.map((num) => ({
+    key: num,
+    value: (num - 1) * dataPerPage + currentData,
+    text: (num - 1) * dataPerPage + currentData,
+  }));
+
+  const onSelectBoxChange: OnSelectBoxChangeType = (e, { value }) => {
+    paginate(+value / 10);
+  };
+
+  useEffect(() => {
+    setSelectBoxValue(numberOfUsers);
+  }, [currentPage]);
 
   return (
     <>
       <div className={css.pagination}>
         <div className={css["total-container"]}>
           <p>
-            Showing <em>{(currentPage - 1) * dataPerPage + currentData}</em> out
-            of <b>{totalData}</b>
+            Showing
+            <Select
+              className={css.select}
+              value={selectBoxValue}
+              placeholder={numberOfUsers}
+              options={selectBoxOptions}
+              onChange={onSelectBoxChange}
+            />
+            out of <b>{totalData}</b>
           </p>
         </div>
         <div className={css["paginate-container"]}>
@@ -156,7 +187,7 @@ const Pagination = ({
   );
 };
 
-const Filter = ({
+const Filter: FilterType = ({
   setData,
   allData,
   persistData,
@@ -171,7 +202,7 @@ const Filter = ({
     onChange: onOrganizationChange,
     onBlur: onOrganizationBlur,
     reset: resetOrganization,
-  } = useInput((value) => value?.trim() !== "");
+  } = useInput<string>((value) => value?.trim() !== "");
 
   const {
     value: name,
@@ -180,7 +211,7 @@ const Filter = ({
     onChange: onNameChange,
     onBlur: onNameBlur,
     reset: resetName,
-  } = useInput((value) => value?.trim() !== "");
+  } = useInput<string>((value) => value?.trim() !== "");
 
   const {
     value: email,
@@ -189,7 +220,7 @@ const Filter = ({
     onChange: onEmailChange,
     onBlur: onEmailBlur,
     reset: resetEmail,
-  } = useInput((value) => value?.trim() !== "");
+  } = useInput<string>((value) => value?.trim() !== "");
 
   const {
     value: phone,
@@ -198,7 +229,7 @@ const Filter = ({
     onChange: onPhoneChange,
     onBlur: onPhoneBlur,
     reset: resetPhone,
-  } = useInput((value) => value?.trim() !== "");
+  } = useInput<string>((value) => value?.trim() !== "");
 
   const {
     value: date,
@@ -207,7 +238,7 @@ const Filter = ({
     onChange: onDateChange,
     onBlur: onDateBlur,
     reset: resetDate,
-  } = useInput((value) => value?.trim() !== "");
+  } = useInput<string>((value) => value?.trim() !== "");
 
   const {
     value: status,
@@ -216,7 +247,7 @@ const Filter = ({
     onChange: onStatusChange,
     onBlur: onStatusBlur,
     reset: resetStatus,
-  } = useInput((value) => value?.trim() !== "");
+  } = useInput<string>((value) => value?.trim() !== "");
 
   const organizationOptions = allData?.map(
     (data, i) => new SelectClass(i, data?.orgName, data?.orgName)
@@ -227,17 +258,6 @@ const Filter = ({
   );
 
   const filter = () => {
-    // const filteredData = allData?.filter(
-    //   (data) =>
-    //     (organizationIsValid ? data?.orgName === organization : true) ||
-    //     (nameIsValid ? data?.userName === name : true) ||
-    //     (emailIsValid ? data?.email === email : true) ||
-    //     (phoneIsValid ? data?.phoneNumber === phone : true) ||
-    //     (dateIsValid
-    //       ? new Date(data?.createdAt)?.getTime() === new Date(date)?.getTime()
-    //       : true) ||
-    //     (statusIsValid ? true : true)
-    // );
     const filteredData = allData?.filter(
       (data) =>
         data?.orgName === organization ||
@@ -285,7 +305,9 @@ const Filter = ({
           placeholder="Select organization"
           className={css.select}
           value={organization}
-          onChange={(e, { value }) => onOrganizationChange(value)}
+          onChange={(e: any, { value }: { value: string }) =>
+            onOrganizationChange(value)
+          }
           options={organizationOptions}
         />
         <Form.Input
@@ -293,14 +315,14 @@ const Filter = ({
           placeholder="User"
           className={css.input}
           value={name}
-          onChange={(e) => onNameChange(e?.target?.value)}
+          onChange={(e: any) => onNameChange(e?.target?.value)}
         />
         <Form.Input
           label="Phone number"
           placeholder="Phone"
           className={css.input}
           value={phone}
-          onChange={(e) => onPhoneChange(e?.target?.value)}
+          onChange={(e: any) => onPhoneChange(e?.target?.value)}
         />
         <Form.Input
           label="Email"
@@ -609,8 +631,23 @@ export const UsersTab = () => {
       );
   };
 
+  const rowTag = (index) => {
+    if (index % 3 === 0) return "pending";
+    if (index % 4 === 0) return "inactive";
+    if (index % 5 === 0) return "active";
+    return "blacklisted";
+  };
+
+  console.log("Paginate data", paginateData);
+
   useEffect(() => {
-    getUsers((res) => setFilteredUsers(res?.data));
+    getUsers((res) => {
+      const taggedUsers = res.data?.map((user, i) => ({
+        ...user,
+        tag: rowTag(i),
+      }));
+      setFilteredUsers(taggedUsers);
+    });
   }, []);
 
   return (
@@ -692,7 +729,7 @@ export const UsersTab = () => {
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              {paginateData?.map((user) => (
+              {paginateData?.map((user, i) => (
                 <>
                   <Table.Row key={user?.id}>
                     <Table.Cell>{user?.orgName}</Table.Cell>
@@ -706,7 +743,7 @@ export const UsersTab = () => {
                       {new Date(user?.createdAt)?.toUTCString()}
                     </Table.Cell>
                     <Table.Cell>
-                      <Tag type="pending" />
+                      <Tag type={user?.tag || rowTag(i)} />
                     </Table.Cell>
                     <Table.Cell
                       className={css["user-options-toogle-container"]}
