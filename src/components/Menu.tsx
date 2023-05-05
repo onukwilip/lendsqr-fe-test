@@ -110,7 +110,7 @@ const Menu = () => {
                         ? `${css["each-menu"]} ${css.active}`
                         : `${css["each-menu"]}`
                     }
-                    to={eachItem?.slug}
+                    to={eachItem?.slug || "#"}
                   >
                     <li>
                       <div>

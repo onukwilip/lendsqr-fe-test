@@ -6,8 +6,9 @@ import Menu from "../components/Menu";
 import { UsersTab, UserDetails } from "../components/UsersTab";
 import css from "../styles/dashboard/Dashboard.module.scss";
 import profilePic from "../assets/img/profile-pic.png";
+import { MobileMenuType } from "../types";
 
-const MobileMenu = ({ toogleMenu }) => {
+const MobileMenu: MobileMenuType = ({ toogleMenu }) => {
   const variants = {
     initial: {
       // opacity: 0.5,
@@ -41,13 +42,12 @@ const MobileMenu = ({ toogleMenu }) => {
             color: "blue",
             icon: "search",
           }}
-          actionPosition="right"
           placeholder="Search for anything"
         />
 
         <div
           className={css["icon-container"]}
-          onClick={(e) => toogleMenu((prev) => !prev)}
+          onClick={(e) => toogleMenu((prev: boolean) => !prev)}
           data-testid="hideMenu"
         >
           <i className="fa-solid fa-xmark"></i>
@@ -93,7 +93,6 @@ export const Header = () => {
               color: "blue",
               icon: "search",
             }}
-            actionPosition="right"
             placeholder="Search for anything"
           />
         </div>

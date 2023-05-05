@@ -54,7 +54,7 @@ describe("Dashboard component test", () => {
       fireEvent.click(toogleIcon);
       setTimeout(() => {
         expect(getMenuElement).not.toBeInTheDocument();
-      }, [1000 * 3]);
+      }, 1000 * 3);
     });
 
     test("should hide Menu component on hide icon click", async () => {
@@ -71,7 +71,7 @@ describe("Dashboard component test", () => {
 
       setTimeout(() => {
         expect(getMenuElement).not.toBeInTheDocument();
-      }, [1000 * 3]);
+      }, 1000 * 3);
     });
 
     test("should show Menu component and children on toogle icon click", async () => {
@@ -93,20 +93,5 @@ describe("Dashboard component test", () => {
       expect(profileContainer).toBeInTheDocument();
       expect(menuContainer).toBeInTheDocument();
     });
-
-    // test("should not display toogle icon on desktop view", () => {
-    //   render(<Header />);
-    //   const toogleElement = screen.getByTestId(/showMenu/i);
-    //   expect(toogleElement).not.toBeVisible();
-    // });
-
-    // test("should not display profile and search containers when screen width is less than 761px", () => {
-    //   render(<Header />);
-    //   window.innerWidth = 760;
-    //   const searchContainer = screen.getByTestId(/searchContainer/i);
-    //   const profileContainer = screen.getByTestId(/profileContainer/i);
-    //   expect(searchContainer).not.toBeVisible();
-    //   expect(profileContainer).not.toBeVisible();
-    // });
   });
 });

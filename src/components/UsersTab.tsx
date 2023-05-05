@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Divider,
@@ -14,15 +14,20 @@ import css from "../styles/users/UsersTab.module.scss";
 import { CardClass, MenuClass, SelectClass } from "../utils/utils";
 import axios from "axios";
 import { useInput } from "use-manage-form";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Loader from "./Loader";
 import dummyUser from "../assets/img/placeholder-img.png";
 import {
   CardType,
   FilterType,
+  MappedUsertype,
   OnSelectBoxChangeType,
   PaginationType,
+  PersistedDataType,
+  ProfileSectionType,
+  UserOptionsType,
   UserTagType,
+  UserType,
 } from "../types";
 
 const testUser = {
@@ -144,9 +149,9 @@ const Pagination: PaginationType = ({
             <Select
               className={css.select}
               value={selectBoxValue}
-              placeholder={numberOfUsers}
+              placeholder={numberOfUsers?.toString()}
               options={selectBoxOptions}
-              onChange={onSelectBoxChange}
+              onChange={onSelectBoxChange as any}
             />
             out of <b>{totalData}</b>
           </p>
@@ -305,9 +310,7 @@ const Filter: FilterType = ({
           placeholder="Select organization"
           className={css.select}
           value={organization}
-          onChange={(e: any, { value }: { value: string }) =>
-            onOrganizationChange(value)
-          }
+          onChange={(e, { value }) => onOrganizationChange(value)}
           options={organizationOptions}
         />
         <Form.Input
@@ -358,7 +361,7 @@ const Filter: FilterType = ({
   );
 };
 
-const UserOptions = ({ onViewDetails, onActivate, onBlacklist, user }) => {
+const UserOptions: UserOptionsType = ({ user }) => {
   return (
     <Link to={`/dashboard/user/${user?.id}`} className={css["user-options"]}>
       <div className={css.group}>
@@ -374,15 +377,15 @@ const UserOptions = ({ onViewDetails, onActivate, onBlacklist, user }) => {
   );
 };
 
-export const UserDetails = () => {
+export const UserDetails: React.FC<{}> = () => {
   const params = useParams();
-  const [mappedUser, setMappedUser] = useState(/**@type testUser */ {});
+  const [mappedUser, setMappedUser] = useState<MappedUsertype | any>({});
   const {
     sendRequest: getUser,
     data: user,
     error,
     loading,
-  } = useAjaxHook({
+  } = useAjaxHook<UserType>({
     instance: axios,
     options: {
       url: `https://6270020422c706a0ae70b72c.mockapi.io/lendsqr/api/v1/users/${params?.id}`,
@@ -399,7 +402,7 @@ export const UserDetails = () => {
     new MenuClass("App and System", "fa-solid fa-mobile-button"),
   ];
 
-  const mapFunction = ([key, eachItem], i) => {
+  const mapFunction = ([key, eachItem]: [string, any], i: number) => {
     if (typeof eachItem === "object")
       return (
         <>
@@ -409,7 +412,7 @@ export const UserDetails = () => {
       );
   };
 
-  const ProfileSection = ({ header, profileDetails }) => {
+  const ProfileSection: ProfileSectionType = ({ header, profileDetails }) => {
     return (
       <div className={css["profile-section"]}>
         {header && <h3>{header}</h3>}
@@ -562,7 +565,7 @@ export const UserDetails = () => {
             {menus.map((menu) => (
               <li>
                 <i className={menu.icon} title={menu.name}></i>
-                <Link>{menu.name}</Link>
+                <Link to="#">{menu.name}</Link>
               </li>
             ))}
           </ul>
@@ -575,15 +578,48 @@ export const UserDetails = () => {
         </div>
       </section>
     );
+
+  return (
+    <div
+      style={{
+        width: "100%",
+        height: "90vh",
+        display: "flex",
+        alignItems: "flex-start",
+        justifyContent: "center",
+        padding: "1rem",
+      }}
+    >
+      {error?.response?.status === 500 ? (
+        <Message
+          error
+          content={`There was an error fetching user, please reload browser`}
+          icon="page4"
+        />
+      ) : error?.response?.status === 404 ? (
+        <Message
+          error
+          content={`User with id ${params.id} not found`}
+          icon="page4"
+        />
+      ) : (
+        <Message
+          error
+          content={`There was an error fetching user, please reload browser`}
+          icon="page4"
+        />
+      )}
+    </div>
+  );
 };
 
-export const UsersTab = () => {
+export const UsersTab: React.FC<{}> = () => {
   const {
     sendRequest: getUsers,
     data: users,
     error,
     loading,
-  } = useAjaxHook({
+  } = useAjaxHook<UserType[]>({
     instance: axios,
     options: {
       url: `https://6270020422c706a0ae70b72c.mockapi.io/lendsqr/api/v1/users`,
@@ -592,16 +628,20 @@ export const UsersTab = () => {
   });
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [filterState, setFilterState] = useState("");
-  const [persistedData, setPersistedData] = useState({});
-  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [filterState, setFilterState] = useState<boolean | string>("");
+  const [persistedData, setPersistedData] = useState<PersistedDataType | any>(
+    {}
+  );
+  const [filteredUsers, setFilteredUsers] = useState<UserType[]>([]);
   const postsPerPage = 10;
   const lastIndex = currentPage * postsPerPage;
   const firstIndex = lastIndex - postsPerPage;
   const paginateData = filteredUsers?.slice(firstIndex, lastIndex);
-  const [userOptionsState, setUserOptionsState] = useState(false);
+  const [userOptionsState, setUserOptionsState] = useState<boolean | string>(
+    false
+  );
 
-  const toogleFilter = (state) => {
+  const toogleFilter = (state: string) => {
     if (filterState === state) {
       setFilterState(false);
     } else {
@@ -609,7 +649,7 @@ export const UsersTab = () => {
     }
   };
 
-  const toogleUserOptions = (state) => {
+  const toogleUserOptions = (state: string | boolean) => {
     if (userOptionsState === state) {
       setUserOptionsState(false);
     } else {
@@ -617,7 +657,7 @@ export const UsersTab = () => {
     }
   };
 
-  const filterTenary = (state) => {
+  const filterTenary = (state: string) => {
     if (filterState === state)
       return (
         <Filter
@@ -631,7 +671,7 @@ export const UsersTab = () => {
       );
   };
 
-  const rowTag = (index) => {
+  const rowTag = (index: number) => {
     if (index % 3 === 0) return "pending";
     if (index % 4 === 0) return "inactive";
     if (index % 5 === 0) return "active";
@@ -641,7 +681,7 @@ export const UsersTab = () => {
   console.log("Paginate data", paginateData);
 
   useEffect(() => {
-    getUsers((res) => {
+    getUsers((res: { data: UserType[] }) => {
       const taggedUsers = res.data?.map((user, i) => ({
         ...user,
         tag: rowTag(i),

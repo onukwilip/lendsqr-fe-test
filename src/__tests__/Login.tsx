@@ -2,6 +2,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import Login, { LoginForm } from "../pages/Login";
 import { tooglePasswordType } from "../utils/utils";
+import { MockLoginFormType } from "../types";
 
 describe("Login Component test", () => {
   const MockLogin = () => (
@@ -10,7 +11,10 @@ describe("Login Component test", () => {
     </BrowserRouter>
   );
 
-  const MockLoginForm = ({ onSubmit, tooglePasswordType }) => (
+  const MockLoginForm: MockLoginFormType = ({
+    onSubmit,
+    tooglePasswordType,
+  }) => (
     <BrowserRouter>
       <LoginForm onSubmit={onSubmit} tooglePasswordType={tooglePasswordType} />
     </BrowserRouter>
@@ -59,7 +63,12 @@ describe("Login Component test", () => {
         tooglePasswordType(passwordType, mockSetPasswordType)
       );
 
-      render(<MockLoginForm tooglePasswordType={mockTooglePassword} />);
+      render(
+        <MockLoginForm
+          onSubmit={() => {}}
+          tooglePasswordType={mockTooglePassword}
+        />
+      );
 
       const toogleElement = screen.getByTestId("passwordToogle");
 
@@ -72,9 +81,14 @@ describe("Login Component test", () => {
 
     test("form submit handler should be called on button click", () => {
       const mockSubmitHandler = jest.fn();
-      render(<MockLoginForm onSubmit={mockSubmitHandler} />);
+      render(
+        <MockLoginForm
+          onSubmit={mockSubmitHandler}
+          tooglePasswordType={() => {}}
+        />
+      );
 
-      const submitFormElement = screen.getByRole("button", { type: "submit" });
+      const submitFormElement = screen.getByText(/LOG IN/);
 
       fireEvent.click(submitFormElement);
 

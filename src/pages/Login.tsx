@@ -3,10 +3,11 @@ import { Button, Form, Icon } from "semantic-ui-react";
 import css from "../styles/login/Login.module.scss";
 import svgImg from "../assets/img/pablo-sign-in 1demo.svg";
 import { useNavigate } from "react-router-dom";
+import { LoginFormType, PasswordInputType } from "../types";
 
 // https://www.lendsqr.com/assets/icons/header-logo.svg
 
-export const LoginForm = ({ onSubmit, tooglePasswordType }) => {
+export const LoginForm: LoginFormType = ({ onSubmit, tooglePasswordType }) => {
   const [passwordType, setPasswordType] = useState("password");
   const navigate = useNavigate();
 
@@ -94,7 +95,7 @@ const Login = () => {
   );
 };
 
-const PasswordInput = ({ passwordType, tooglePassword }) => {
+const PasswordInput: PasswordInputType = ({ passwordType, tooglePassword }) => {
   return (
     <div className={css["password-input"]}>
       <input
@@ -103,7 +104,7 @@ const PasswordInput = ({ passwordType, tooglePassword }) => {
         minLength={8}
         required
       />
-      <button onClick={tooglePassword} type="button">
+      <button onClick={tooglePassword as any} type="button">
         {passwordType === "password" ? "SHOW" : "HIDE"}
       </button>
     </div>

@@ -1,5 +1,5 @@
 export class MenuClass {
-  constructor(public name: string, public icon: string, public slug: string) {
+  constructor(public name: string, public icon: string, public slug?: string) {
     this.name = name;
     this.icon = icon;
     this.slug = slug;
