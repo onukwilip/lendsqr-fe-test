@@ -24,7 +24,7 @@ jobs:
         run: CI=true npm test
 
       - name: Create application build
-        run: npm run build
+        run: CI=false npm run build
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v3
