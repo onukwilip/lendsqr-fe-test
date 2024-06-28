@@ -1,0 +1,33 @@
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+  test-build:
+    name: Clone repoitory, test, and build the newly added feaures
+    runs-on: ubuntu-latest
+    container: node:gallium
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v3
+
+      - name: Install node modules
+        run: npm install -f
+
+      - name: Run functional tests
+        run: CI=true npm test
+
+      - name: Create application build
+        run: CI=false npm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: ./build
