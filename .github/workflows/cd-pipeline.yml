@@ -1,0 +1,70 @@
+on:
+  release:
+    types: [published]
+
+jobs:
+  test-build:
+    name: Clone repoitory, test, and build the newly added feaures
+    runs-on: ubuntu-latest
+    container: node:gallium
+    steps:
+      - name: Checkout the repo
+        uses: actions/checkout@v3
+
+      - name: Install node modules
+        run: npm install -f
+
+      - name: Run functional tests
+        run: CI=true npm test
+
+      - name: Create application build
+        run: CI=false npm run build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: ./build
+
+  deploy:
+    needs: test-build
+    name: Package build artiface in Docker container, and deploy to Google Cloud Run
+    runs-on: ubuntu-latest
+    env:
+      D_USER: ${{secrets.DOCKER_USER}}
+      D_PASS: ${{secrets.DOCKER_PASSWORD}}
+      SERVICE: lendsqr
+      REGION: us-central1
+      IMAGE: prince2006/lendsqr:${{github.SHA}}
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+
+      - name: Setup Cloud CLI
+        uses: google-github-actions/setup-gcloud@v0.2.0
+        with:
+          project_id: ${{ secrets.PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - name: Authenticate for Docker Hub
+        run: docker login -u ${{env.D_USER}} -p ${{env.D_PASS}}
+
+      - name: Build and tag application image
+        run: docker build -t ${{env.IMAGE}} .
+
+      - name: Deploy image to Docker Hub
+        run: docker push ${{env.IMAGE}}
+
+      - name: Deploy image to Google Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v0.4.0
+        id: cloud-run
+        with:
+          service: ${{env.SERVICE}}
+          image: ${{env.IMAGE}}
+          region: ${{env.REGION}}
+
+      - name: Display outputs
+        run: echo ${{steps.cloud-run.outputs}}
