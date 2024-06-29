@@ -1,6 +1,6 @@
 FROM node:gallium
 WORKDIR /app
-RUN npm install -f
+RUN npm init -y
 RUN npm i -g serve
 COPY . .
 EXPOSE 3000
