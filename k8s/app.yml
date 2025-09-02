@@ -1,35 +1,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-	name: lendsqr-fe-deployment
-	labels:
-		app: lendsqr-fe
+  name: lendsqr-fe-deployment
+  labels:
+    app: lendsqr-fe
 spec:
-	replicas: 2
-	selector:
-		matchLabels:
-			app: lendsqr-fe
-	template:
-		metadata:
-			labels:
-				app: lendsqr-fe
-		spec:
-			containers:
-			- name: lendsqr-fe
-				image: prince2006/lendsqr:slim
-				ports:
-				- containerPort: 80
+  replicas: 2
+  selector:
+    matchLabels:
+      app: lendsqr-fe
+  template:
+    metadata:
+      labels:
+        app: lendsqr-fe
+    spec:
+      containers:
+        - name: lendsqr-fe
+          image: prince2006/lendsqr:slim
+          ports:
+            - containerPort: 80
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-	name: lendsqr-fe-service
+  name: lendsqr-fe-service
 spec:
-	selector:
-		app: lendsqr-fe
-	ports:
-		- protocol: TCP
-			port: 80
-			targetPort: 80
-	type: ClusterIP
+  selector:
+    app: lendsqr-fe
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP
